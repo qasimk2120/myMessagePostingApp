@@ -13,8 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatToolbar } from '@angular/material/toolbar';
 import { PostListComponent } from './posts/post-list/post-list.component';
 import { MatExpansionModule } from '@angular/material/expansion';
-
-
+import { provideHttpClient } from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,6 +21,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     PostCreateComponent,
     HeaderComponent,
     PostListComponent
+    
   ],
   imports: [
     BrowserModule,
@@ -32,10 +32,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatCardModule,
     MatButtonModule,
     MatToolbar,
-    MatExpansionModule
+    MatExpansionModule,
     
   ],
   providers: [
+    provideHttpClient(),
   ],
   bootstrap: [AppComponent]
 })
