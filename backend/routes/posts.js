@@ -56,9 +56,7 @@ router.post("",multer({storage:storage}).single("image"),
       content: req.body.content,
       imagePath: imagePath,
     });
-    console.log(post);
     Post.updateOne({ _id: req.params.id }, post).then((result) => {
-      console.log(result);
       res.status(200).json({
         message: "Post updated Successfully!",
       });
@@ -66,10 +64,23 @@ router.post("",multer({storage:storage}).single("image"),
   });
 
   router.get("", (req, res, next) => {
-    Post.find().then((documents) => {
+    const pageSize =  +req.query.pageSize;
+    const currentPage = +req.query.page;
+    const postQuery = Post.find();
+    let fetchedPosts;
+    if(pageSize && currentPage){
+      postQuery
+            .skip(pageSize * (currentPage - 1))
+            .limit(pageSize)
+    }
+    postQuery.find().then((documents) => {
+      fetchedPosts = documents;
+      return Post.countDocuments()
+    }).then(count =>{
       res.status(200).json({
-        message: "Post fetched Successfully!",
-        posts: documents,
+        message: "Posts fetched Successfully!",
+        posts: fetchedPosts,
+        maxPosts: count
       });
     });
   });
@@ -89,7 +100,6 @@ router.post("",multer({storage:storage}).single("image"),
   router.delete("/:id", (req, res, next) => {
     Post.deleteOne({ _id: req.params.id })
       .then((result) => {
-        console.log(result);
         res.status(200).json({
           message: "Post deleted Successfully!",
         });
