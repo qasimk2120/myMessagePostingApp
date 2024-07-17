@@ -40,3 +40,9 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Secrets and Image Folder
+images/
+nodemon.json
+src/environments/environment.development.ts
+src/environments/environment.ts

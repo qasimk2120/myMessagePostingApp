@@ -1,32 +1,5 @@
-const multer = require("multer");
+
 const Post = require("../models/post");
-
-const MIME_TYPE_MAP = {
-    "image/png": "png",
-    "image/jpeg": "jpg",
-    "image/jpg": "jpg"
-};
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const isValid = MIME_TYPE_MAP[file.mimetype];
-        let error = new Error("Invalid mime type!");
-        if (isValid) {
-            error = null;
-        }
-        cb(error, "backend/images");
-    },
-    filename: (req, file, cb) => {
-        const name = file.originalname
-            .toLowerCase()
-            .split(" ")
-            .join("-");
-        const ext = MIME_TYPE_MAP[file.mimetype];
-        cb(null, name + "-" + Date.now() + "." + ext);
-    }
-});
-
-exports.fileStorage = multer({ storage: storage }).single("image")
 
 
 
@@ -67,18 +40,19 @@ exports.updatePost = (req, res, next) => {
     });
 
     Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post).then(result => {
-        if (result.modifiedCount > 0) {
+        console.log(result)
+        if (result.matchedCount > 0) {
             res.status(200).json({ message: "Update successful!" });
         }
-        else if (result.modifiedCount == 0) {
+        else {
             res.status(401).json({ message: "Unauthorized to perform this operation!" });
         }
-
-    }).catch(err => {
-        res.status(500).json({
-            message: 'Could not update Post'
+    })
+        .catch(err => {
+            res.status(500).json({
+                message: 'Could not update Post'
+            });
         });
-    });
 }
 
 exports.getAllPosts = (req, res, next) => {
@@ -113,11 +87,11 @@ exports.getPost = (req, res, next) => {
             res.status(404).json({ message: "Post not found!" });
         }
     })
-    .catch(error => {
-        res.status(500).json({
-            message: 'Fetching post failed!'
-        });
-    })
+        .catch(error => {
+            res.status(500).json({
+                message: 'Fetching post failed!'
+            });
+        })
 }
 
 exports.deletePost = (req, res, next) => {
@@ -126,12 +100,12 @@ exports.deletePost = (req, res, next) => {
             res.status(200).json({ message: "Delete successful!" });
         } else if (result.deletedCount == 0) {
             res.status(401).json({ message: "Unauthorized to perform this operation!" });
-        } 
+        }
     })
-    .catch(error => {
-        res.status(500).json({
-            message: 'Deleting post failed!'
+        .catch(error => {
+            res.status(500).json({
+                message: 'Deleting post failed!'
+            });
         });
-    });
 }
 

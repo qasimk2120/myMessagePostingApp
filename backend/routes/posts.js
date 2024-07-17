@@ -1,11 +1,11 @@
 const express = require("express");
+const fileStorage = require("../middleware/filestorage");
 const {
   createPost,
   updatePost,
   deletePost,
   getPost,
-  getAllPosts,
-  fileStorage
+  getAllPosts
 } = require("../controllers/posts");
 const checkAuth = require("../middleware/check-auth");
 
