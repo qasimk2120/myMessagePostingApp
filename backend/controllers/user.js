@@ -17,7 +17,7 @@ exports.signup =  (req, res, next) => {
         })
         .catch(err => {
           res.status(500).json({
-            error: err
+              message: "User Creation Failed 😢, Please Try Again!",
           });
         });
     });
@@ -29,7 +29,7 @@ exports.login =  (req, res, next) => {
     .then(user => {
       if (!user) {
         return res.status(401).json({
-          message: "Recheck your Email or Password"
+          message: "Password or Email Don't Match!"
         });
       }
       fetchedUser = user;
@@ -38,7 +38,7 @@ exports.login =  (req, res, next) => {
     .then(result => {
       if (!result) {
         return res.status(401).json({
-          message: "Password or Email Don't Match"
+          message: "Password or Email Don't Match!"
         });
       }
       const token = jwt.sign(
@@ -53,6 +53,8 @@ exports.login =  (req, res, next) => {
       });
     })
     .catch(err => {
-        return new Error("Token mismatch", err);
+        return res.status(401).json({
+          message: "Authentication Failed"
+        })
     });
   }

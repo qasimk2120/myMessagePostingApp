@@ -10,7 +10,7 @@ const MIME_TYPE_MAP = {
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const isValid = MIME_TYPE_MAP[file.mimetype];
-        let error = new Error("Invalid mime type");
+        let error = new Error("Invalid mime type!");
         if (isValid) {
             error = null;
         }
@@ -40,13 +40,15 @@ exports.createPost = (req, res, next) => {
     });
     post.save().then(createdPost => {
         res.status(201).json({
-            message: "Post added successfully",
+            message: "Post added successfully!",
             post: {
                 ...createdPost,
                 id: createdPost._id,
-            
+
             }
         });
+    }).catch(err => {
+        return res.status(500).json({ message: "Creating post failed!" });
     });
 }
 
@@ -65,13 +67,17 @@ exports.updatePost = (req, res, next) => {
     });
 
     Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post).then(result => {
-        if(result.modifiedCount >0){
+        if (result.modifiedCount > 0) {
             res.status(200).json({ message: "Update successful!" });
         }
-        else if(result.modifiedCount ==0){
+        else if (result.modifiedCount == 0) {
             res.status(401).json({ message: "Unauthorized to perform this operation!" });
         }
-        
+
+    }).catch(err => {
+        res.status(500).json({
+            message: 'Could not update Post'
+        });
     });
 }
 
@@ -94,7 +100,10 @@ exports.getAllPosts = (req, res, next) => {
                 posts: fetchedPosts,
                 maxPosts: count
             });
-        });
+        })
+        .catch(error => {
+            res.status(500).json({ message: 'Fetching posts failed!' });
+        })
 }
 exports.getPost = (req, res, next) => {
     Post.findById(req.params.id).then(post => {
@@ -103,18 +112,26 @@ exports.getPost = (req, res, next) => {
         } else {
             res.status(404).json({ message: "Post not found!" });
         }
-    });
+    })
+    .catch(error => {
+        res.status(500).json({
+            message: 'Fetching post failed!'
+        });
+    })
 }
 
 exports.deletePost = (req, res, next) => {
-    Post.deleteOne({ _id: req.params.id, creator: req.userData.userId}).then(result => {
-        if(result.deletedCount >0){
+    Post.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(result => {
+        if (result.deletedCount > 0) {
             res.status(200).json({ message: "Delete successful!" });
-        }else if(result.deletedCount == 0){
+        } else if (result.deletedCount == 0) {
             res.status(401).json({ message: "Unauthorized to perform this operation!" });
-        }else {
-            throw new Error('Unexpected Error')
-        }
+        } 
+    })
+    .catch(error => {
+        res.status(500).json({
+            message: 'Deleting post failed!'
+        });
     });
 }
 

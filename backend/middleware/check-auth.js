@@ -7,6 +7,8 @@ module.exports = (req, res, next) => {
     req.userData = {email: decodedToken.email, userId: decodedToken.userId};
     next();
   } catch (error) {
-    throw new Error("JWT token validation failed");
+    res.status(401).json({
+      message: "You Are Not Authorized to do this operation"
+    })
   }
 };

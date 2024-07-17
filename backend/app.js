@@ -15,6 +15,7 @@ mongoose
     console.log("Connected to database!");
   })
   .catch(() => {
+    res.staus(500).json({message: "Database Error"})
     console.log("connection to database failed ");
   });
 
