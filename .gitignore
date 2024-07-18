@@ -44,7 +44,8 @@ Thumbs.db
 # Secrets and Image Folder
 images/
 nodemon.json
-environments/
-
-src/environments/environment.development.ts
+D:\Project_folder\Angular_projects\myMessagePostingApp\src\environments/
+D:\Project_folder\Angular_projects\myMessagePostingApp\src\environments
 src/environments/environment.ts
+src/environments/environment.development.ts
+src/environments/environment.development.ts

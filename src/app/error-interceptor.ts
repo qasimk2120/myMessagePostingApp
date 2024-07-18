@@ -23,7 +23,9 @@ export class ErrorInterceptor implements HttpInterceptor {
                         data: {
                             message: errorMessage
                         }
+                        
                     })
+                    
                     return throwError(error)
                 })
             );
