@@ -44,5 +44,7 @@ Thumbs.db
 # Secrets and Image Folder
 images/
 nodemon.json
+environments/
+
 src/environments/environment.development.ts
 src/environments/environment.ts
